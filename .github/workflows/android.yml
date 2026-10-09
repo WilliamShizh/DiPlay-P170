@@ -25,7 +25,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install Android SDK 37
+      - name: Accept Android SDK licenses and refresh package index
         shell: bash
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
@@ -36,8 +36,10 @@ jobs:
             echo "::error::sdkmanager not found under ANDROID_HOME=$ANDROID_HOME"
             exit 1
           fi
+          "$SDKMANAGER" --update >/dev/null 2>&1 || true
           yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" "platform-tools" "platforms;android-37" "build-tools;36.0.0"
+          "$SDKMANAGER" "platform-tools" "platforms;android-37" "build-tools;36.0.0" \
+            || echo "::warning::sdkmanager install failed; Gradle will auto-download missing SDK components"
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
