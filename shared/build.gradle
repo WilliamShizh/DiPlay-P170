@@ -5,6 +5,10 @@ android {
     namespace = 'com.shilapi.xcertplay.shared'
     compileSdk = 37
 
+    buildFeatures {
+        aidl = true
+    }
+
     defaultConfig {
         minSdk = 28
         targetSdk = 37
